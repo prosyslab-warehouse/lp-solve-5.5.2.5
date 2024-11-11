@@ -1,0 +1,114 @@
+#!/usr/bin/make -f
+#-*- makefile -*-
+# Made with the aid of dh_make, by Craig Small
+# GNU copyright 1997 by Joey Hess.
+# Some lines taken from debmake, by Christoph Lameter.
+# Copyright (C) 2004-2005 Anibal Monsalve Salazar <anibal@debian.org>.
+# Copyright (C) 2005 Juan Esteban Monsalve Tobon <esteban@v7w.com>.
+# Copyright (C) 2006-2009 Rene Engelhard <rene@debian.org>
+#
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+build: build-arch build-indep
+
+build-arch: build-arch-stamp
+build-arch-stamp:
+	dh_testdir
+
+	cd lpsolve55 && bash -x -e ccc
+	cd lp_solve && bash -x -e ccc
+
+	touch build-arch-stamp
+
+build-indep: build-indep-stamp
+build-indep-stamp:
+	# noop
+	touch build-indep-stamp
+	
+clean:
+	dh_testdir
+	dh_testroot
+	cd lpsolve55 && rm -rf bin
+	cd lp_solve && rm -rf bin
+
+	rm -f build-*stamp install-*-stamp
+
+	dh_clean
+
+install: install-arch install-indep
+
+install-arch: install-arch-stamp
+install-arch-stamp: build-arch-stamp
+	dh_testdir -a
+	dh_testroot -a
+	dh_prep -a
+	dh_installdirs -a
+
+	install -D -m 755 lp_solve/bin/*/lp_solve debian/lp-solve/usr/bin/lp_solve
+	install -D -m 644 lpsolve55/bin/*/liblpsolve55.a debian/liblpsolve55-dev/usr/lib/liblpsolve55.a
+	install -m 644 lpsolve55/bin/*/liblpsolve55_pic.a debian/liblpsolve55-dev/usr/lib/liblpsolve55_pic.a
+	install -D -m 644 lpsolve55/bin/*/liblpsolve55.so debian/lp-solve/usr/lib/lp_solve/liblpsolve55.so
+	install -d debian/liblpsolve55-dev/usr/include/lpsolve
+	for x in lp_*.h; do \
+	   install -m 644 $$x debian/liblpsolve55-dev/usr/include/lpsolve/$$x;		\
+	done
+	install -m 644 shared/*.h debian/liblpsolve55-dev/usr/include/lpsolve/ 
+	touch install-arch-stamp
+
+install-indep: install-indep-stamp
+install-indep-stamp:
+	dh_testdir -i
+	dh_testroot -i
+	dh_prep -i
+	dh_installdirs -i
+
+	touch install-indep-stamp
+
+binary-indep: build-indep install-indep
+	dh_testdir -i
+	dh_testroot -i
+	dh_installdocs -i README.txt
+	dh_installdocs -i -plp-solve-doc doc/*
+	# the additional gifs and jpgs were not included due to diff.gz reasons. Link to
+	# online copies
+	for i in `find debian/lp-solve-doc/usr/share/doc/lp-solve-doc -name "*.htm*"`; do \
+		perl -pi -e 's,src=\",src=\"http://lpsolve.sourceforge.net/5.5/,g' $$i; \
+	done
+	dh_installmenu -i
+	dh_installcron -i
+	dh_installman -i
+	dh_installinfo -i
+	dh_installchangelogs -i
+	dh_link -i
+	dh_strip -i
+	dh_compress -i
+	dh_fixperms -i
+	dh_installdeb -i
+	dh_shlibdeps -i
+	dh_gencontrol -i
+	dh_md5sums -i
+	dh_builddeb -i
+
+binary-arch: build-arch install-arch
+	dh_testdir -a
+	dh_testroot -a
+	dh_installdocs -a README.txt
+	dh_installexamples -a -pliblpsolve55-dev demo/demo.c
+	dh_installmenu -a
+	dh_installcron -a
+	dh_installman -a
+	dh_installinfo -a
+	dh_installchangelogs -a
+	dh_link -a
+	dh_strip -a
+	dh_compress -a -X demo.c
+	dh_fixperms -a
+	dh_installdeb -a
+	dh_shlibdeps -a
+	dh_gencontrol -a
+	dh_md5sums -a
+	dh_builddeb -a
+
+binary: binary-indep binary-arch
+.PHONY: build build-arch build-indep clean binary-indep binary-arch binary install install-arch install-indep

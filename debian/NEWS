@@ -1,0 +1,24 @@
+lp-solve (5.5-1) unstable; urgency=low
+
+  * From upstreams README.txt:
+
+    "Note that lp2mps and mps2lp don't exist anymore. However this functionality is now implemented
+     in lp_solve:
+
+     lp2mps can be simulated as following:
+     lp_solve -parse_only -lp infile -wmps outfile
+
+     mps2lp can be simulated as following:
+     lp_solve -parse_only -mps infile -wlp outfile"
+
+    Please adapt as necessary.
+
+  * The library has been split out into liblpsove55-dev (and has changed
+    the name upstream to liblpsolve55.a). The includes moved to
+    /usr/include/lpsolve
+
+  * The library has been fixed to build with the libcolamd from libufsparse
+    instead of shipping an own version. You might need to use -lcolamd in
+    addition (and install libufsparse-dev)
+
+ -- Rene Engelhard <rene@debian.org>  Fri, 16 Jun 2006 14:23:55 +0200

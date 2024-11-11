@@ -1,0 +1,35 @@
+Description: Upstream changes introduced in version 5.5.0.13-7
+ This patch has been created by dpkg-source during the package build.
+ Here's the last changelog entry, hopefully it gives details on why
+ those changes were made:
+ .
+ lp-solve (5.5.0.13-7) unstable; urgency=low
+ .
+   * move to "3.0 (quilt)" format
+ .
+ The person named in the Author field signed this changelog entry.
+Author: Rene Engelhard <rene@debian.org>
+
+---
+The information above should follow the Patch Tagging Guidelines, please
+checkout http://dep.debian.net/deps/dep3/ to learn about the format. Here
+are templates for supplementary fields that you might want to add:
+
+Origin: <vendor|upstream|other>, <url of original patch>
+Bug: <url in upstream bugtracker>
+Bug-Debian: http://bugs.debian.org/<bugnumber>
+Forwarded: <no|not-needed|url proving that it has been forwarded>
+Reviewed-By: <name and email of someone who approved the patch>
+Last-Update: <YYYY-MM-DD>
+
+--- lp-solve-5.5.0.13.orig/lp_matrix.c
++++ lp-solve-5.5.0.13/lp_matrix.c
+@@ -1404,7 +1404,7 @@ STATIC int mat_appendrow(MATrec *mat, in
+       return( 0 );
+   }
+   /* else if((row != NULL) && !mat->is_roworder) */
+-  else if(!isNZ && (row != NULL) && !mat->is_roworder)
++  else if(!isNZ && !mat->is_roworder)
+     row[0] = 0;
+ 
+   /* Capture OF definition in row mode */

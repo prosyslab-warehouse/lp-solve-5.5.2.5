@@ -1,0 +1,29 @@
+Description: change 0 to 0. in isnan() call to fix FTBFS with glibc 2.23
+Author: Logan Rosen <logan@ubuntu.com>
+Bug-Ubuntu: https://launchpad.net/bugs/1584534
+Forwarded: no
+Last-Update: 2016-05-22
+---
+This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
+--- a/lp_solve/ccc
++++ b/lp_solve/ccc
+@@ -20,7 +20,7 @@
+ echo '#include <stdio.h>'>>/tmp/isnan.c
+ echo '#include <stdlib.h>'>>/tmp/isnan.c
+ echo '#include <math.h>'>>/tmp/isnan.c
+-echo 'main(){isnan(0);}'>>/tmp/isnan.c
++echo 'main(){isnan(0.);}'>>/tmp/isnan.c
+ $c /tmp/isnan.c -o /tmp/isnan $math >/dev/null 2>&1
+ if [ $? = 0 ]
+ then NOISNAN=
+--- a/lpsolve55/ccc
++++ b/lpsolve55/ccc
+@@ -18,7 +18,7 @@
+ echo '#include <stdio.h>'>>/tmp/isnan.c
+ echo '#include <stdlib.h>'>>/tmp/isnan.c
+ echo '#include <math.h>'>>/tmp/isnan.c
+-echo 'main(){isnan(0);}'>>/tmp/isnan.c
++echo 'main(){isnan(0.);}'>>/tmp/isnan.c
+ $c /tmp/isnan.c -o /tmp/isnan $math >/dev/null 2>&1
+ if [ $? = 0 ]
+ then NOISNAN=

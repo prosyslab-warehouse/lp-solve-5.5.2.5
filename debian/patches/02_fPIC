@@ -1,0 +1,26 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 02_fPIC.dpatch by  <rene@debian.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: No description.
+
+@DPATCH@
+diff -urNad lp-solve-5.5.0.15~/lpsolve55/ccc lp-solve-5.5.0.15/lpsolve55/ccc
+--- lp-solve-5.5.0.15~/lpsolve55/ccc	2007-10-18 00:28:08.000000000 +0200
++++ lp-solve-5.5.0.15/lpsolve55/ccc	2007-10-18 00:31:02.000000000 +0200
+@@ -41,9 +41,14 @@ $c -s -c -I.. -I../shared -I../bfp -I../bfp/bfp_LUSOL -I../bfp/bfp_LUSOL/LUSOL -
+ ar rv bin/$PLATFORM/liblpsolve55.a `echo $src|sed s/[.]c/.o/g|sed 's/[^ ]*\///g'`
+ ranlib bin/$PLATFORM/liblpsolve55.a
+ 
++$c -s -fPIC -c -I.. -I../shared -I../bfp -I../bfp/bfp_LUSOL -I../bfp/bfp_LUSOL/LUSOL -I../colamd $opts $def $NOISNAN -DYY_NEVER_INTERACTIVE -DPARSER_LP -DINVERSE_ACTIVE=INVERSE_LUSOL -DRoleIsExternalInvEngine $src
++ar rv bin/$PLATFORM/liblpsolve55_pic.a `echo $src|sed s/[.]c/.o/g|sed 's/[^ ]*\///g'`
++
++ranlib bin/$PLATFORM/liblpsolve55_pic.a
++
+ if [ "$so" != "" ]
+ then
+-  $c -fpic -s -c -I.. -I../shared -I../bfp -I../bfp/bfp_LUSOL -I../bfp/bfp_LUSOL/LUSOL -I../colamd -I. $opts $NOISNAN -DYY_NEVER_INTERACTIVE -DPARSER_LP -DINVERSE_ACTIVE=INVERSE_LUSOL -DRoleIsExternalInvEngine $src
++  $c -fPIC -s -c -I.. -I../shared -I../bfp -I../bfp/bfp_LUSOL -I../bfp/bfp_LUSOL/LUSOL -I../colamd -I. $opts $NOISNAN -DYY_NEVER_INTERACTIVE -DPARSER_LP -DINVERSE_ACTIVE=INVERSE_LUSOL -DRoleIsExternalInvEngine $src
+   $c -shared -Wl,-Bsymbolic -Wl,-soname,liblpsolve55.so -o bin/$PLATFORM/liblpsolve55.so `echo $src|sed s/[.]c/.o/g|sed 's/[^ ]*\///g'` -lc -lm -ldl
+ fi
+ 

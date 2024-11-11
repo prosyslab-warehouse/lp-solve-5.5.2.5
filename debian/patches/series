@@ -1,0 +1,7 @@
+02_fPIC
+03_system_colamd
+04_link_to_shared_lib
+06_O2
+07_fix_xli_CPLEX-segfault
+08_isnan
+09_lp_solve.1
